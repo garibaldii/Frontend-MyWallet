@@ -1,17 +1,18 @@
-import React from "react";
-
-const DropdownMenu = () => {
+interface DropdownMenuProps {
+    isOpen: boolean;
+  }
+  
+  const DropdownMenu: React.FC<DropdownMenuProps> = ({ isOpen }) => {
     return (
-        <div className="flex flex-col">
-            <ul className= "flex flex-col gap-4">
-                <li>Cadastrar Nova Conta</li>
-                <li>Contas a Receber</li>
-                <li>Contas a Pagar</li>
-                <li>Histórico de Contas Pagas</li>
-            </ul>
-        </div>
-    )
-}
-
-
-export default DropdownMenu
+      <div className={`flex flex-col dropdownMenu ${isOpen ? "open" : ""}`}>
+        <ul className="flex flex-col gap-4 text-xs">
+          <li className="dropdownItem">Cadastrar Nova Conta</li>
+          <li className="dropdownItem">Contas a Receber</li>
+          <li className="dropdownItem">Contas a Pagar</li>
+          <li className="dropdownItem">Histórico de Contas Pagas</li>
+        </ul>
+      </div>
+    );
+  };
+  
+  export default DropdownMenu;
