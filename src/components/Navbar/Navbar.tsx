@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import DropdownMenu from "./MenuHamburguer";
+import DadosUsuario from "./DadosUsuario";
+import Link from "next/link";
 
 export default function Navbar() {
   const [openMenu, setOpenMenu] = useState(false);
@@ -26,13 +28,14 @@ export default function Navbar() {
 
         
         <div className="absolute left-1/2 transform -translate-x-1/2">
+          <Link href="/Inicio">
           <span className="text-black text-2xl font-bold">MyWallet 🗃️</span>
-
+          </Link>
 
         </div>
         
         
-        <div className="flex items-center">{/* Conteúdo vazio */}</div>
+        <div className="flex items-center"> <DadosUsuario/> </div>
       </div>
     </nav>
   );

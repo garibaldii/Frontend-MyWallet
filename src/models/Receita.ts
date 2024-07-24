@@ -1,6 +1,6 @@
 
 import { UsuarioComum } from "./UsuarioComum";
-import { Conta } from "./abstratas/Conta";
+import { Conta } from "../interfaces/Conta";
 
 import { Status } from "../enums/Status";
 
@@ -12,20 +12,18 @@ export enum CategoriaReceita {
 }
 
 
-export class Receita extends Conta{
-
-
-  operacao(receita: Receita, usuario: UsuarioComum): void {
-    usuario.saldo = receita.valor + usuario.saldo
-    receita.status = Status.FINALIZADO
-
-  }
- 
-
+export class Receita implements Conta{
+  ;
+  id!: number;
+  titulo!: string;
+  descricao!: String;
+  valor!: number;
+  
   categoria!: CategoriaReceita;
 
 
   usuario!: UsuarioComum;
 
+  status: Status = Status.ATIVO
 
 }

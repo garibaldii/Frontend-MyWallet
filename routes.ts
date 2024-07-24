@@ -1,7 +1,11 @@
 const routes = {
     home: '/',
-    login: '/login',
-    register: '/register',
+    login: '/Login',
+    inicio: '/Inicio',
+    receitas: '/Receitas',
+    despesas: '/Despesas',
+    contasFinalizadas: '/ContasFinalizadas',
+    criarConta: 'ContaForm'
   };
   
   export default routes;
