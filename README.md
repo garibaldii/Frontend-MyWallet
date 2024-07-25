@@ -7,19 +7,11 @@ Bem-vindo ao projeto de **Gestão Financeira**! Este sistema é uma aplicação 
 ## 🛠️ Tecnologias Utilizadas
 
 - **Backend**: Node.js com TypeScript
+- **Frontend**: React, NextJS com Typescript
 - **Banco de Dados**: MySQL
 - **ORM**: TypeORM
 - **Bibliotecas**: Express, bcryptjs, jsonwebtoken
 
-## 📁 Estrutura do Projeto
-
-- **`src/`**: Código fonte do projeto
-  - **`controllers/`**: Lógica para as rotas da API
-  - **`entity/`**: Definições das entidades do banco de dados
-  - **`routes/`**: Definição das rotas da API
-  - **`services/`**: Regras de negócio e manipulação de dados
-  - **`database.ts`**: Configuração e conexão com o banco de dados
-  - **`app.ts`**: Inicialização do servidor Express
 
 ## 🔧 Funcionalidades da API
 
