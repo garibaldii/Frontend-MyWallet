@@ -4,6 +4,7 @@ const routes = {
     inicio: '/Inicio',
     receitas: '/Receitas',
     despesas: '/Despesas',
+    editarConta: '/Editar',
     contasFinalizadas: '/ContasFinalizadas',
     criarConta: 'ContaForm'
   };

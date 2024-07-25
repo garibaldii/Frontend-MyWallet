@@ -3,6 +3,7 @@ import { cadastraUsuario } from '@/services/userService';
 import { UsuarioComum } from '@/models/UsuarioComum';
 import Link from 'next/link';
 import routes from '../../routes';
+import { Router, useRouter } from 'next/router';
 
 const fileToBlob = (file: File): Promise<Blob> => {
   return new Promise((resolve, reject) => {
@@ -10,7 +11,9 @@ const fileToBlob = (file: File): Promise<Blob> => {
 
     reader.onloadend = () => {
       if (reader.result) {
-        resolve(new Blob([reader.result], { type: file.type }));
+        const blob = new Blob([reader.result], { type: file.type });
+        console.log("Blob criado com sucesso:", blob);
+        resolve(blob);
       } else {
         reject(new Error('Erro ao ler o arquivo.'));
       }
@@ -24,6 +27,7 @@ const fileToBlob = (file: File): Promise<Blob> => {
   });
 };
 
+
 const CadastroUsuario: React.FC = () => {
   const [nome, setNome] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -33,6 +37,7 @@ const CadastroUsuario: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -43,18 +48,24 @@ const CadastroUsuario: React.FC = () => {
     try {
       const fotoBlob: Blob = foto ? await fileToBlob(foto) : new Blob(); // Garante que fotoBlob nunca seja null
 
-      const novoUsuario: Omit<UsuarioComum, 'id'> = {
-        nome,
-        email,
-        senha,
-        saldo: Number(saldo),
-        foto: fotoBlob,
-        receitas: [],
-        despesas: [],
-      };
-      const resposta = await cadastraUsuario(novoUsuario);
+      const formData = new FormData();
+      formData.append('nome', nome);
+      formData.append('email', email);
+      formData.append('senha', senha);
+      formData.append('saldo', String(saldo));
+      formData.append('foto', fotoBlob, foto?.name || 'default.jpg')
+
+      const resposta = await fetch('http://localhost:8080/api/usuarioComum/', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if(!resposta.ok){
+        throw new Error("ERRO AO CADASTRAR USUÁRIO")
+      }
 
       setSuccess('Usuário cadastrado com sucesso!');
+      
     } catch (err) {
       setError('Erro ao cadastrar o usuário.');
     } finally {
@@ -62,11 +73,25 @@ const CadastroUsuario: React.FC = () => {
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFoto(e.target.files[0]);
+      const file = e.target.files[0];
+      const blob = await fileToBlob(file);
+  
+      console.log("Tamanho do Blob:", blob.size);
+      console.log("Tipo do Blob:", blob.type);
+      console.log("Tamanho do Arquivo Original:", file.size);
+      console.log("Tipo do Arquivo Original:", file.type);
+  
+      // Opcional: Crie uma URL do Blob para visualização
+      const url = URL.createObjectURL(blob);
+      console.log("URL do Blob:", url);
+  
+      // Limpe a URL após o uso
+      URL.revokeObjectURL(url);
     }
   };
+  ;
 
   return (
     <div className='flex justify-center items-center min-h-screen'>

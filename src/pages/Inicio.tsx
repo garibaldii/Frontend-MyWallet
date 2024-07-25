@@ -1,26 +1,33 @@
-//import Image from "next/image";
-import { Inter } from "next/font/google";
-import Navbar from "@/components/Navbar/Navbar";
+// src/pages/dashboard.tsx
+import { useEffect } from "react";
 
+import { useUsuario } from "@/context/ContextoUsuario";
 
+const Dashboard = () => {
+  const {  atualizarReceitas } = useUsuario();
 
-const inter = Inter({ subsets: ["latin"] });
+  useEffect(() => {
+    const handleResize = () => {
+      atualizarReceitas();
+    };
 
+    // Adiciona o listener para o evento de resize
+    window.addEventListener('resize', handleResize);
 
+    // Remove o listener quando o componente for desmontado
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [atualizarReceitas]);
 
+  
 
-//vai precisar criar uma funcao que irá consumir o objeto da api e alimentar variáveis locais de cada componente
-//por exemplo, navbar deve retornar o nome do usuário, logo terá um método nela.
-
-
-
-
-export default function Inicio() {
   return (
-    <main>
-      <div></div>
-      
-      
-    </main>
+    <div className = "flex flex-col justify-center items-center h-2/3">
+      <h1 className = "text-5xl text-green-950 font-bold">Seja bem vindo ao MyWallet!</h1>
+      <h1 >Seu gerenciador financeiro particular 😉</h1>
+    </div>
   );
-}
+};
+
+export default Dashboard;

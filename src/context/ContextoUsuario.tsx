@@ -4,39 +4,57 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { retornaUsarioJwt } from '@/services/userService';
 import { UsuarioComum } from '@/models/UsuarioComum';
 
-// Define o tipo do contexto
-type UsuarioContextType = UsuarioComum | null;
+// Tipo do contexto que inclui o objeto `usuario` e a função `atualizarReceitas`
+type UsuarioContextType = {
+  usuario: UsuarioComum | null;
+  atualizarReceitas: () => void;
+};
 
 // Cria o contexto com o tipo definido
-const UsuarioContext = createContext<UsuarioContextType>(null);
+const UsuarioContext = createContext<UsuarioContextType | undefined>(undefined);
 
 interface UsuarioProviderProps {
-    children: ReactNode;
+  children: ReactNode;
 }
 
 // Provedor do contexto
 export const UsuarioProvider: React.FC<UsuarioProviderProps> = ({ children }) => {
-    const [usuario, setUsuario] = useState<UsuarioContextType>(null);
+  const [usuario, setUsuario] = useState<UsuarioComum | null>(null);
 
-    useEffect(() => {
-        const carregarUsuario = async () => {
-            try {
-                const usuario = await retornaUsarioJwt();
-                setUsuario(usuario);
-            } catch (error) {
-                console.error('Erro ao carregar usuário:', error);
-            }
-        };
+  const carregarUsuario = async () => {
+    try {
+      const usuario = await retornaUsarioJwt();
+      setUsuario(usuario);
+    } catch (error) {
+      console.error('Erro ao carregar usuário:', error);
+    }
+  };
 
-        carregarUsuario();
-    }, []);
+  // Função para atualizar as receitas
+  const atualizarReceitas = async () => {
+    try {
+      await carregarUsuario();
+    } catch (error) {
+      console.error('Erro ao atualizar receitas:', error);
+    }
+  };
 
-    return (
-        <UsuarioContext.Provider value={usuario}>
-            {children}
-        </UsuarioContext.Provider>
-    );
+  useEffect(() => {
+    carregarUsuario();
+  }, []);
+
+  return (
+    <UsuarioContext.Provider value={{ usuario, atualizarReceitas }}>
+      {children}
+    </UsuarioContext.Provider>
+  );
 };
 
 // Hook personalizado para usar o contexto
-export const useUsuario = () => useContext(UsuarioContext);
+export const useUsuario = () => {
+  const context = useContext(UsuarioContext);
+  if (context === undefined) {
+    throw new Error('useUsuario deve ser usado dentro de um UsuarioProvider');
+  }
+  return context;
+};

@@ -2,14 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-
-@import 'menuHamburguer.css';
+@import "menuHamburguer.css";
 
 :root {
-
 }
 
-html, body, #__next {
-    height: 100%;
-  }
+html,
+body,
+#__next {
+  height: 100%;
+}
 
+.chart-container {
+  width: 300px; /* Ajuste a largura conforme necessário */
+  height: 300px; /* Ajuste a altura conforme necessário */
+}

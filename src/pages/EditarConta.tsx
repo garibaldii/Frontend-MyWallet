@@ -1,9 +1,9 @@
-// src/pages/contaForm.tsx
+// src/pages/contaEdit.tsx
 
-import React, { useState } from 'react';
-import { useUsuario } from '@/context/ContextoUsuario'; // Importe o hook para pegar o usuário
-import { cadastrarReceita } from '@/services/ReceitaService';
-import { cadastrarDespesa } from '@/services/DespesaService';
+import React, { useState, useEffect } from 'react';
+import { useUsuario } from '@/context/ContextoUsuario';
+import { editarReceita, obterReceitaPorId } from '@/services/ReceitaService';
+import { editarDespesa, obterDespesaPorId } from '@/services/DespesaService';
 import { Receita } from '@/models/Receita';
 import { Despesa } from '@/models/Despesa';
 import { useRouter } from 'next/router';
@@ -21,24 +21,55 @@ enum CategoriaDespesa {
     SEGURO_MEDICO = "Seguro Médico",
 }
 
-export default function ContaForm() {
+export default function ContaEdit() {
     const [fase, setFase] = useState<'primeira' | 'segunda'>('primeira');
     const [tipoConta, setTipoConta] = useState<'receita' | 'despesa' | null>(null);
     const [categoria, setCategoria] = useState('');
     const [valor, setValor] = useState('');
     const [titulo, setTitulo] = useState('');
     const [descricao, setDescricao] = useState('');
+    const [idConta, setIdConta] = useState<number | null>(null);
 
-    const valorNumero = parseFloat(valor);
-    const router = useRouter()
-
-    const usuario = useUsuario(); // Pegue o usuário do contexto
+    const router = useRouter();
+    const usuario = useUsuario();
     const categoriasReceita = Object.values(CategoriaReceita);
     const categoriasDespesa = Object.values(CategoriaDespesa);
 
+    useEffect(() => {
+        const id = router.query.id as string;
+        const tipo = router.query.tipo as string;
+        if (id && tipo) {
+            setIdConta(Number(id));
+            setTipoConta(tipo as 'receita' | 'despesa');
+            buscarConta(Number(id), tipo as 'receita' | 'despesa');
+        }
+    }, [router.query.id, router.query.tipo]);
+
+    const buscarConta = async (id: number, tipo: 'receita' | 'despesa') => {
+        try {
+            if (tipo === 'receita') {
+                const conta = await obterReceitaPorId(id);
+                setCategoria(conta.categoria);
+                setValor(conta.valor.toString());
+                setTitulo(conta.titulo);
+                setDescricao(conta.descricao);
+            } else if (tipo === 'despesa') {
+                const conta = await obterDespesaPorId(id);
+                setCategoria(conta.categoria);
+                setValor(conta.valor.toString());
+                setTitulo(conta.titulo);
+                setDescricao(conta.descricao);
+            }
+            setFase('segunda');
+        } catch (error) {
+            console.error('Erro ao buscar conta:', error);
+            alert('Erro ao buscar conta');
+        }
+    };
+
     const handleTipoContaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTipoConta(event.target.value as 'receita' | 'despesa');
-        setCategoria(''); // Limpar categoria ao mudar o tipo de conta
+        setCategoria('');
     };
 
     const handleSubmit = async (event: React.FormEvent) => {
@@ -52,7 +83,7 @@ export default function ContaForm() {
         const data = {
             tipoConta,
             categoria,
-            valor,
+            valor: parseFloat(valor),
             titulo,
             descricao,
             usuario: usuario,
@@ -60,17 +91,19 @@ export default function ContaForm() {
 
         try {
             if (tipoConta === 'receita') {
-                await cadastrarReceita(data as unknown as Receita);
+                if (idConta) {
+                    await editarReceita(idConta, data as unknown as Receita);
+                }
             } else if (tipoConta === 'despesa') {
-                await cadastrarDespesa(data as unknown as Despesa);
+                if (idConta) {
+                    await editarDespesa(idConta, data as unknown as Despesa);
+                }
             }
-            alert('Conta salva com sucesso');
-            console.log(usuario)
-            router.push(routes.inicio)
-            
+            alert('Conta editada com sucesso');
+            router.push(routes.inicio);
         } catch (error) {
-            console.error('Erro ao salvar conta:', error);
-            alert('Erro ao salvar conta');
+            console.error('Erro ao editar conta:', error);
+            alert('Erro ao editar conta');
         }
     };
 

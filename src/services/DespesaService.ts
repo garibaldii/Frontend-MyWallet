@@ -16,3 +16,13 @@ export const finalizarDespesa = async (idDespesa: number, idUsuario: number): Pr
     return resposta.data
 
 } 
+
+export const editarDespesa = async (id: number, despesa: Despesa): Promise<Despesa> => {
+    const resposta = await apiClient.put(`despesa/${id}`, despesa)
+    return resposta.data
+}
+
+export const obterDespesaPorId = async (id: number): Promise<Despesa> => {
+    const resposta = await apiClient.get(`despesa/${id}`)
+    return resposta.data
+}

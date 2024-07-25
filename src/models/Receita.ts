@@ -16,7 +16,7 @@ export class Receita implements Conta{
   ;
   id!: number;
   titulo!: string;
-  descricao!: String;
+  descricao!: string;
   valor!: number;
   
   categoria!: CategoriaReceita;

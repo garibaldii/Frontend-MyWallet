@@ -4,7 +4,8 @@ import React from 'react';
 import { useUsuario } from '@/context/ContextoUsuario';
 
 export default function ContasFinalizadas() {
-  const usuario = useUsuario();
+
+  const { usuario, atualizarReceitas } = useUsuario();
 
   // Verifique se o usuário está carregado e tem receitas e despesas
   if (!usuario || !usuario.receitas || !usuario.despesas) {
@@ -23,6 +24,7 @@ export default function ContasFinalizadas() {
 
   return (
     <div className="overflow-x-auto">
+      <h2 className="text-center text-3xl mb-3 font-bold">Histórico de Contas</h2>
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>

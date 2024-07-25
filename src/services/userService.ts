@@ -2,7 +2,7 @@ import { apiClient } from "./apiServices";
 
 import { UsuarioComum } from "@/models/UsuarioComum";
 import { verificaJwt } from "./authService";
-import { Usuario } from "@/interfaces/Usuario";
+
 
 
 export const cadastraUsuario = async (usuario: Omit<UsuarioComum, 'id'>): Promise<UsuarioComum> => {
