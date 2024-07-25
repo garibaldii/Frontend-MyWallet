@@ -2,7 +2,7 @@
 
 ## 📜 Descrição
 
-Bem-vindo ao projeto de **Gestão Financeira**! Este sistema é uma aplicação backend desenvolvida com **Node.js**, **TypeScript** e **TypeORM**, utilizando **MySQL** como banco de dados. O objetivo é fornecer uma solução para controlar receitas, despesas e gerenciar informações de usuários de forma eficiente e segura.
+Bem-vindo ao projeto de **Gestão Financeira**! Este sistema é uma aplicação front/backend desenvolvida com **Node.js**, **TypeScript** e **TypeORM**, utilizando **MySQL** como banco de dados. O objetivo é fornecer uma solução para controlar receitas, despesas e gerenciar informações de usuários de forma eficiente e segura.
 
 ## 🛠️ Tecnologias Utilizadas
 
